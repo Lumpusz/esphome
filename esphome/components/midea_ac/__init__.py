@@ -51,10 +51,10 @@ def to_code(config):
         sens = yield sensor.new_sensor(config[CONF_HUMIDITY_SETPOINT])
         cg.add(var.set_humidity_setpoint_sensor(sens))
     if CONF_BOOST in config:
-        cg.add(var.set_supports_boost(config[CONF_BOOST]))
+        cg.add(var.set_boost(config[CONF_BOOST]))
     if CONF_SLEEP in config:
-        cg.add(var.set_supports_sleep(config[CONF_SLEEP]))
+        cg.add(var.set_sleep(config[CONF_SLEEP]))
     if CONF_ECO in config:
-        cg.add(var.set_supports_eco(config[CONF_ECO]))
+        cg.add(var.set_eco(config[CONF_ECO]))
     if CONF_FREEZE_PROTECTION in config:
-        cg.add(var.set_supports_freeze_protection(config[CONF_FREEZE_PROTECTION]))
+        cg.add(var.set_freeze_protection(config[CONF_FREEZE_PROTECTION]))
