@@ -2562,6 +2562,22 @@ bool ListEntitiesClimateResponse::decode_varint(uint32_t field_id, ProtoVarInt v
       this->supported_swing_modes.push_back(value.as_enum<enums::ClimateSwingMode>());
       return true;
     }
+    case 15: {
+      this->supports_boost = value.as_bool();
+      return true;
+    }
+    case 16: {
+      this->supports_sleep = value.as_bool();
+      return true;
+    }
+    case 17: {
+      this->supports_eco = value.as_bool();
+      return true;
+    }
+    case 18: {
+      this->supports_freeze_protection = value.as_bool();
+      return true;
+    }
     default:
       return false;
   }
@@ -2627,6 +2643,10 @@ void ListEntitiesClimateResponse::encode(ProtoWriteBuffer buffer) const {
   for (auto &it : this->supported_swing_modes) {
     buffer.encode_enum<enums::ClimateSwingMode>(14, it, true);
   }
+  buffer.encode_bool(15, this->supports_boost);
+  buffer.encode_bool(16, this->supports_sleep);
+  buffer.encode_bool(17, this->supports_eco);
+  buffer.encode_bool(18, this->supports_freeze_protection);
 }
 void ListEntitiesClimateResponse::dump_to(std::string &out) const {
   char buffer[64];
@@ -2696,6 +2716,22 @@ void ListEntitiesClimateResponse::dump_to(std::string &out) const {
     out.append(proto_enum_to_string<enums::ClimateSwingMode>(it));
     out.append("\n");
   }
+
+  out.append("  supports_boost: ");
+  out.append(YESNO(this->supports_boost));
+  out.append("\n");
+
+  out.append("  supports_sleep: ");
+  out.append(YESNO(this->supports_sleep));
+  out.append("\n");
+
+  out.append("  supports_eco: ");
+  out.append(YESNO(this->supports_eco));
+  out.append("\n");
+
+  out.append("  supports_freeze_protection: ");
+  out.append(YESNO(this->supports_freeze_protection));
+  out.append("\n");
   out.append("}");
 }
 bool ClimateStateResponse::decode_varint(uint32_t field_id, ProtoVarInt value) {
@@ -2718,6 +2754,22 @@ bool ClimateStateResponse::decode_varint(uint32_t field_id, ProtoVarInt value) {
     }
     case 10: {
       this->swing_mode = value.as_enum<enums::ClimateSwingMode>();
+      return true;
+    }
+    case 11: {
+      this->boost = value.as_bool();
+      return true;
+    }
+    case 12: {
+      this->sleep = value.as_bool();
+      return true;
+    }
+    case 13: {
+      this->eco = value.as_bool();
+      return true;
+    }
+    case 14: {
+      this->freeze_protection = value.as_bool();
       return true;
     }
     default:
@@ -2761,6 +2813,10 @@ void ClimateStateResponse::encode(ProtoWriteBuffer buffer) const {
   buffer.encode_enum<enums::ClimateAction>(8, this->action);
   buffer.encode_enum<enums::ClimateFanMode>(9, this->fan_mode);
   buffer.encode_enum<enums::ClimateSwingMode>(10, this->swing_mode);
+  buffer.encode_bool(11, this->boost);
+  buffer.encode_bool(12, this->sleep);
+  buffer.encode_bool(13, this->eco);
+  buffer.encode_bool(14, this->freeze_protection);
 }
 void ClimateStateResponse::dump_to(std::string &out) const {
   char buffer[64];
@@ -2808,6 +2864,22 @@ void ClimateStateResponse::dump_to(std::string &out) const {
 
   out.append("  swing_mode: ");
   out.append(proto_enum_to_string<enums::ClimateSwingMode>(this->swing_mode));
+  out.append("\n");
+
+  out.append("  boost: ");
+  out.append(YESNO(this->boost));
+  out.append("\n");
+
+  out.append("  sleep: ");
+  out.append(YESNO(this->sleep));
+  out.append("\n");
+
+  out.append("  eco: ");
+  out.append(YESNO(this->eco));
+  out.append("\n");
+
+  out.append("  freeze_protection: ");
+  out.append(YESNO(this->freeze_protection));
   out.append("\n");
   out.append("}");
 }
@@ -2857,6 +2929,38 @@ bool ClimateCommandRequest::decode_varint(uint32_t field_id, ProtoVarInt value) 
       this->swing_mode = value.as_enum<enums::ClimateSwingMode>();
       return true;
     }
+    case 16: {
+      this->has_boost = value.as_bool();
+      return true;
+    }
+    case 17: {
+      this->boost = value.as_bool();
+      return true;
+    }
+    case 18: {
+      this->has_sleep = value.as_bool();
+      return true;
+    }
+    case 19: {
+      this->sleep = value.as_bool();
+      return true;
+    }
+    case 20: {
+      this->has_eco = value.as_bool();
+      return true;
+    }
+    case 21: {
+      this->eco = value.as_bool();
+      return true;
+    }
+    case 22: {
+      this->has_freeze_protection = value.as_bool();
+      return true;
+    }
+    case 23: {
+      this->freeze_protection = value.as_bool();
+      return true;
+    }
     default:
       return false;
   }
@@ -2899,6 +3003,14 @@ void ClimateCommandRequest::encode(ProtoWriteBuffer buffer) const {
   buffer.encode_enum<enums::ClimateFanMode>(13, this->fan_mode);
   buffer.encode_bool(14, this->has_swing_mode);
   buffer.encode_enum<enums::ClimateSwingMode>(15, this->swing_mode);
+  buffer.encode_bool(16, this->has_boost);
+  buffer.encode_bool(17, this->boost);
+  buffer.encode_bool(18, this->has_sleep);
+  buffer.encode_bool(19, this->sleep);
+  buffer.encode_bool(20, this->has_eco);
+  buffer.encode_bool(21, this->eco);
+  buffer.encode_bool(22, this->has_freeze_protection);
+  buffer.encode_bool(23, this->freeze_protection);
 }
 void ClimateCommandRequest::dump_to(std::string &out) const {
   char buffer[64];
@@ -2965,6 +3077,34 @@ void ClimateCommandRequest::dump_to(std::string &out) const {
 
   out.append("  swing_mode: ");
   out.append(proto_enum_to_string<enums::ClimateSwingMode>(this->swing_mode));
+  out.append("\n");
+
+  out.append("  has_boost: ");
+  out.append(YESNO(this->has_boost));
+  out.append("\n");
+
+  out.append("  boost: ");
+  out.append(YESNO(this->boost));
+  out.append("\n");
+
+  out.append("  has_sleep: ");
+  out.append(YESNO(this->has_sleep));
+  out.append("\n");
+
+  out.append("  sleep: ");
+  out.append(YESNO(this->sleep));
+  out.append("\n");
+
+  out.append("  has_eco: ");
+  out.append(YESNO(this->has_eco));
+  out.append("\n");
+
+  out.append("  eco: ");
+  out.append(YESNO(this->eco));
+  out.append("\n");
+
+  out.append("  freeze_protection: ");
+  out.append(YESNO(this->freeze_protection));
   out.append("\n");
   out.append("}");
 }
