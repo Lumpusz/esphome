@@ -39,6 +39,10 @@ void MideaAC::on_frame(const midea_dongle::Frame &frame) {
   set_property(this->current_temperature, p.get_indoor_temp(), need_publish);
   set_property(this->fan_mode, p.get_fan_mode(), need_publish);
   set_property(this->swing_mode, p.get_swing_mode(), need_publish);
+  set_property(this->boost, p.get_boost_mode(), need_publish);
+  set_property(this->eco, p.get_eco_mode(), need_publish);
+  set_property(this->sleep, p.get_sleep_mode(), need_publish);
+  set_property(this->freeze_protection, p.get_freeze_protection_mode(), need_publish);
   if (need_publish)
     this->publish_state();
   set_sensor(this->outdoor_sensor_, p.get_outdoor_temp());
@@ -76,6 +80,22 @@ void MideaAC::control(const climate::ClimateCall &call) {
     this->cmd_frame_.set_beeper_feedback(this->beeper_feedback_);
     this->cmd_frame_.finalize();
   }
+  if (call.get_boost().has_value() && call.get_boost().value() != this->boost) {
+    this->cmd_frame_.set_boost_mode(call.get_boost().value());
+    this->ctrl_request_ = true;
+  }
+  if (call.get_sleep().has_value() && call.get_sleep().value() != this->sleep) {
+    this->cmd_frame_.set_sleep_mode(call.get_sleep().value());
+    this->ctrl_request_ = true;
+  }
+  if (call.get_eco().has_value() && call.get_eco().value() != this->eco) {
+    this->cmd_frame_.set_eco_mode(call.get_eco().value());
+    this->ctrl_request_ = true;
+  }
+  if (call.get_freeze_protection().has_value() && call.get_freeze_protection().value() != this->freeze_protection) {
+    this->cmd_frame_.set_freeze_protection_mode(call.get_freeze_protection().value());
+    this->ctrl_request_ = true;
+  }
 }
 
 climate::ClimateTraits MideaAC::traits() {
@@ -97,6 +117,10 @@ climate::ClimateTraits MideaAC::traits() {
   traits.set_supports_swing_mode_horizontal(this->traits_swing_horizontal_);
   traits.set_supports_swing_mode_both(this->traits_swing_both_);
   traits.set_supports_current_temperature(true);
+  traits.set_supports_boost(this->traits_boost_);
+  traits.set_supports_sleep(this->traits_sleep_);
+  traits.set_supports_eco(this->traits_eco_);
+  traits.set_supports_freeze_protection(this->traits_freeze_protection_);
   return traits;
 }
 

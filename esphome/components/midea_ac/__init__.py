@@ -1,7 +1,8 @@
 from esphome.components import climate, sensor
 import esphome.config_validation as cv
 import esphome.codegen as cg
-from esphome.const import CONF_ID, UNIT_CELSIUS, UNIT_PERCENT, ICON_THERMOMETER, ICON_WATER_PERCENT
+from esphome.const import (CONF_BOOST, CONF_ECO, CONF_SLEEP,
+                            CONF_FREEZE_PROTECTION, CONF_ID, UNIT_CELSIUS, UNIT_PERCENT, ICON_THERMOMETER, ICON_WATER_PERCENT)
 from esphome.components.midea_dongle import CONF_MIDEA_DONGLE_ID, MideaDongle
 
 DEPENDENCIES = ['midea_dongle']
@@ -22,6 +23,10 @@ CONFIG_SCHEMA = cv.All(climate.CLIMATE_SCHEMA.extend({
     cv.Optional(CONF_BEEPER): cv.boolean,
     cv.Optional(CONF_SWING_HORIZONTAL): cv.boolean,
     cv.Optional(CONF_SWING_BOTH): cv.boolean,
+    cv.Optional(CONF_BOOST): cv.boolean,
+    cv.Optional(CONF_ECO): cv.boolean,
+    cv.Optional(CONF_SLEEP): cv.boolean,
+    cv.Optional(CONF_FREEZE_PROTECTION): cv.boolean,
     cv.Optional(CONF_OUTDOOR_TEMPERATURE): sensor.sensor_schema(UNIT_CELSIUS, ICON_THERMOMETER, 0),
     cv.Optional(CONF_HUMIDITY_SETPOINT): sensor.sensor_schema(UNIT_PERCENT, ICON_WATER_PERCENT, 0),
 }).extend(cv.COMPONENT_SCHEMA))
@@ -45,3 +50,11 @@ def to_code(config):
     if CONF_HUMIDITY_SETPOINT in config:
         sens = yield sensor.new_sensor(config[CONF_HUMIDITY_SETPOINT])
         cg.add(var.set_humidity_setpoint_sensor(sens))
+    if CONF_BOOST in config:
+        cg.add(var.set_supports_boost(config[CONF_BOOST]))
+    if CONF_SLEEP in config:
+        cg.add(var.set_supports_sleep(config[CONF_SLEEP]))
+    if CONF_ECO in config:
+        cg.add(var.set_supports_eco(config[CONF_ECO]))
+    if CONF_FREEZE_PROTECTION in config:
+        cg.add(var.set_supports_freeze_protection(config[CONF_FREEZE_PROTECTION]))

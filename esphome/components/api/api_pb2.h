@@ -689,6 +689,10 @@ class ListEntitiesClimateResponse : public ProtoMessage {
   bool supports_action{false};                                   // NOLINT
   std::vector<enums::ClimateFanMode> supported_fan_modes{};      // NOLINT
   std::vector<enums::ClimateSwingMode> supported_swing_modes{};  // NOLINT
+  bool supports_boost{false};                                    // NOLINT
+  bool supports_sleep{false};                                    // NOLINT
+  bool supports_eco{false};                                      // NOLINT
+  bool supports_freeze_protection{false};                        // NOLINT
   void encode(ProtoWriteBuffer buffer) const override;
   void dump_to(std::string &out) const override;
 
@@ -709,6 +713,10 @@ class ClimateStateResponse : public ProtoMessage {
   enums::ClimateAction action{};         // NOLINT
   enums::ClimateFanMode fan_mode{};      // NOLINT
   enums::ClimateSwingMode swing_mode{};  // NOLINT
+  bool boost{false};                     // NOLINT
+  bool sleep{false};                     // NOLINT
+  bool eco{false};                       // NOLINT
+  bool freeze_protection{false};         // NOLINT
   void encode(ProtoWriteBuffer buffer) const override;
   void dump_to(std::string &out) const override;
 
@@ -733,6 +741,14 @@ class ClimateCommandRequest : public ProtoMessage {
   enums::ClimateFanMode fan_mode{};         // NOLINT
   bool has_swing_mode{false};               // NOLINT
   enums::ClimateSwingMode swing_mode{};     // NOLINT
+  bool has_boost{false};                    // NOLINT
+  bool boost{false};                        // NOLINT
+  bool has_sleep{false};                    // NOLINT
+  bool sleep{false};                        // NOLINT
+  bool has_eco{false};                      // NOLINT
+  bool eco{false};                          // NOLINT
+  bool has_freeze_protection{false};        // NOLINT
+  bool freeze_protection{false};            // NOLINT
   void encode(ProtoWriteBuffer buffer) const override;
   void dump_to(std::string &out) const override;
 

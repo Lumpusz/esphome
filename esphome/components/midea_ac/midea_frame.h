@@ -83,13 +83,17 @@ class PropertiesFrame : public midea_dongle::BaseFrame {
   bool get_eco_mode() const { return this->pbuf_[19]; }
   void set_eco_mode(bool state) { this->set_bytemask_(19, 0xFF, state); }
 
+  /* FREEZE PROTECTION MODE */
+  bool get_freeze_protection_mode() const { return this->pbuf_[31]; }
+  void set_freeze_protection_mode(bool state) { this->set_bytemask_(31, 0x80, state); }
+  
   /* SLEEP MODE */
   bool get_sleep_mode() const { return this->pbuf_[20] & 0x01; }
   void set_sleep_mode(bool state) { this->set_bytemask_(20, 0x01, state); }
 
-  /* TURBO MODE */
-  bool get_turbo_mode() const { return this->pbuf_[20] & 0x02; }
-  void set_turbo_mode(bool state) { this->set_bytemask_(20, 0x02, state); }
+  /* BOOST MODE */
+  bool get_boost_mode() const { return this->pbuf_[20] & 0x02; }
+  void set_boost_mode(bool state) { this->set_bytemask_(20, 0x02, state); }
 
   /// Set properties from another frame
   void set_properties(const PropertiesFrame &p) { memcpy(this->pbuf_ + 11, p.data() + 11, 10); }
