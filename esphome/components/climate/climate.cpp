@@ -33,6 +33,18 @@ void ClimateCall::perform() {
   if (this->away_.has_value()) {
     ESP_LOGD(TAG, "  Away Mode: %s", ONOFF(*this->away_));
   }
+  if (this->boost_.has_value()) {
+    ESP_LOGD(TAG, "  Boost Mode: %s", ONOFF(*this->boost_));
+  }
+  if (this->eco_.has_value()) {
+    ESP_LOGD(TAG, "  Eco Mode: %s", ONOFF(*this->eco_));
+  }
+  if (this->sleep_.has_value()) {
+    ESP_LOGD(TAG, "  Sleep Mode: %s", ONOFF(*this->sleep_));
+  }
+  if (this->freeze_protection_.has_value()) {
+    ESP_LOGD(TAG, "  Freeze Protection Mode: %s", ONOFF(*this->freeze_protection_));
+  }
   this->parent_->control(*this);
 }
 void ClimateCall::validate_() {
@@ -97,6 +109,30 @@ void ClimateCall::validate_() {
     if (!traits.get_supports_away()) {
       ESP_LOGW(TAG, "  Cannot set away mode for this device!");
       this->away_.reset();
+    }
+  }
+  if (this->boost_.has_value()) {
+    if (!traits.get_supports_boost()) {
+      ESP_LOGW(TAG, "  Cannot set boost mode for this device!");
+      this->boost_.reset();
+    }
+  }
+  if (this->eco_.has_value()) {
+    if (!traits.get_supports_eco()) {
+      ESP_LOGW(TAG, "  Cannot set eco mode for this device!");
+      this->eco_.reset();
+    }
+  }
+  if (this->sleep_.has_value()) {
+    if (!traits.get_supports_sleep()) {
+      ESP_LOGW(TAG, "  Cannot set sleep mode for this device!");
+      this->sleep_.reset();
+    }
+  }
+  if (this->freeze_protection_.has_value()) {
+    if (!traits.get_supports_freeze_protection()) {
+      ESP_LOGW(TAG, "  Cannot set freeze protection mode for this device!");
+      this->freeze_protection_.reset();
     }
   }
 }
@@ -187,6 +223,10 @@ const optional<float> &ClimateCall::get_target_temperature() const { return this
 const optional<float> &ClimateCall::get_target_temperature_low() const { return this->target_temperature_low_; }
 const optional<float> &ClimateCall::get_target_temperature_high() const { return this->target_temperature_high_; }
 const optional<bool> &ClimateCall::get_away() const { return this->away_; }
+const optional<bool> &ClimateCall::get_boost() const { return this->boost_; }
+const optional<bool> &ClimateCall::get_eco() const { return this->eco_; }
+const optional<bool> &ClimateCall::get_sleep() const { return this->sleep_; }
+const optional<bool> &ClimateCall::get_freeze_protection() const { return this->freeze_protection_; }
 const optional<ClimateFanMode> &ClimateCall::get_fan_mode() const { return this->fan_mode_; }
 const optional<ClimateSwingMode> &ClimateCall::get_swing_mode() const { return this->swing_mode_; }
 ClimateCall &ClimateCall::set_away(bool away) {
@@ -195,6 +235,38 @@ ClimateCall &ClimateCall::set_away(bool away) {
 }
 ClimateCall &ClimateCall::set_away(optional<bool> away) {
   this->away_ = away;
+  return *this;
+}
+ClimateCall &ClimateCall::set_boost(bool boost) {
+  this->boost_ = boost;
+  return *this;
+}
+ClimateCall &ClimateCall::set_boost(optional<bool> boost) {
+  this->boost_ = boost;
+  return *this;
+}
+ClimateCall &ClimateCall::set_eco(bool eco) {
+  this->eco_ = eco;
+  return *this;
+}
+ClimateCall &ClimateCall::set_eco(optional<bool> eco) {
+  this->eco_ = eco;
+  return *this;
+}
+ClimateCall &ClimateCall::set_sleep(bool freeze_protection) {
+  this->sleep_ = freeze_protection;
+  return *this;
+}
+ClimateCall &ClimateCall::set_sleep(optional<bool> sleep) {
+  this->sleep_ = sleep;
+  return *this;
+}
+ClimateCall &ClimateCall::set_freeze_protection(bool freeze_protection) {
+  this->freeze_protection_ = freeze_protection;
+  return *this;
+}
+ClimateCall &ClimateCall::set_freeze_protection(optional<bool> sleep) {
+  this->freeze_protection_ = sleep;
   return *this;
 }
 ClimateCall &ClimateCall::set_target_temperature_high(optional<float> target_temperature_high) {
@@ -249,6 +321,18 @@ void Climate::save_state_() {
   if (traits.get_supports_away()) {
     state.away = this->away;
   }
+  if (traits.get_supports_boost()) {
+    state.boost = this->boost;
+  }
+  if (traits.get_supports_eco()) {
+    state.eco = this->eco;
+  }
+  if (traits.get_supports_sleep()) {
+    state.sleep = this->sleep;
+  }
+  if (traits.get_supports_freeze_protection()) {
+    state.freeze_protection = this->freeze_protection;
+  }
   if (traits.get_supports_fan_modes()) {
     state.fan_mode = this->fan_mode;
   }
@@ -283,6 +367,18 @@ void Climate::publish_state() {
   }
   if (traits.get_supports_away()) {
     ESP_LOGD(TAG, "  Away: %s", ONOFF(this->away));
+  }
+  if (traits.get_supports_boost()) {
+    ESP_LOGD(TAG, "  Boost: %s", ONOFF(this->boost));
+  }
+  if (traits.get_supports_eco()) {
+    ESP_LOGD(TAG, "  Eco: %s", ONOFF(this->eco));
+  }
+  if (traits.get_supports_sleep()) {
+    ESP_LOGD(TAG, "  Sleep: %s", ONOFF(this->sleep));
+  }
+  if (traits.get_supports_freeze_protection()) {
+    ESP_LOGD(TAG, "  Freeze Protection: %s", ONOFF(this->freeze_protection));
   }
 
   // Send state to frontend
@@ -332,6 +428,18 @@ ClimateCall ClimateDeviceRestoreState::to_call(Climate *climate) {
   if (traits.get_supports_away()) {
     call.set_away(this->away);
   }
+  if (traits.get_supports_boost()) {
+    call.set_boost(this->boost);
+  }
+  if (traits.get_supports_eco()) {
+    call.set_eco(this->eco);
+  }
+  if (traits.get_supports_sleep()) {
+    call.set_sleep(this->sleep);
+  }
+  if (traits.get_supports_freeze_protection()) {
+    call.set_freeze_protection(this->freeze_protection);
+  }
   if (traits.get_supports_fan_modes()) {
     call.set_fan_mode(this->fan_mode);
   }
@@ -351,6 +459,18 @@ void ClimateDeviceRestoreState::apply(Climate *climate) {
   }
   if (traits.get_supports_away()) {
     climate->away = this->away;
+  }
+  if (traits.get_supports_boost()) {
+    climate->boost = this->boost;
+  }
+  if (traits.get_supports_eco()) {
+    climate->eco = this->eco;
+  }
+  if (traits.get_supports_sleep()) {
+    climate->sleep = this->sleep;
+  }
+  if (traits.get_supports_freeze_protection()) {
+    climate->freeze_protection = this->freeze_protection;
   }
   if (traits.get_supports_fan_modes()) {
     climate->fan_mode = this->fan_mode;
